@@ -1,13 +1,33 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 
 function Chat({ messages, sendMessage }) {
   const [newMessage, setNewMessage] = useState('');
+  const [chatMessages, setChatMessages] = useState(messages);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (newMessage.trim()) {
       sendMessage(newMessage);
-      setNewMessage(''); // Limpa o campo após enviar
+
+      
+      try {
+        const response = await axios.get('/get', {
+          params: { message: newMessage }, 
+        });
+
+        
+        const botResponse = response.data.response; 
+
+       
+        setChatMessages((prevMessages) => [
+          ...prevMessages,
+          { text: botResponse, isUser: false }, 
+        ]);
+      } catch (error) {
+        console.error('Erro ao chamar a API:', error);
+      }
+
+      setNewMessage('');
     }
   };
 
@@ -15,7 +35,7 @@ function Chat({ messages, sendMessage }) {
     <div>
       <div className="chat-window">
         <div className="chat-messages">
-          {messages.map((msg, index) => (
+          {chatMessages.map((msg, index) => (
             <div key={index} className={msg.isUser ? 'user' : 'bot'}>
               {msg.text}
             </div>
@@ -35,4 +55,4 @@ function Chat({ messages, sendMessage }) {
   );
 }
 
-export default Chat
+export default Chat;
