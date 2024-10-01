@@ -16,9 +16,8 @@ function Chat({ messages, sendMessage }) {
         });
 
         
-        const botResponse = response.data.response; 
+        const botResponse = response.data.response.response; 
 
-       
         setChatMessages((prevMessages) => [
           ...prevMessages,
           { text: botResponse, isUser: false }, 
