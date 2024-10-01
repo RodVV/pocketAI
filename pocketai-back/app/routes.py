@@ -11,7 +11,7 @@ def get_response():
     user_message = request.args.get('message')  # Obtém a mensagem do usuário
     # Processa a mensagem e gera uma resposta
     response_message = f"Você disse: {user_message}"  # Exemplo de resposta
-    return jsonify(response={"response": response_message})
+    return jsonify({"userMessage": response_message})
 
 # @main_bp.route('/items', methods=['POST'])
 # def create_item():
