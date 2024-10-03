@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from .services.example_service import get_all_items, create_new_item, update_item, delete_item
-from .crawler.run_spider import run_spider
+from .crawler.crawler_runner import run_spider_and_return_data
 
 main_bp = Blueprint('main', __name__)
 
@@ -17,14 +17,15 @@ def get_response():
 
 @main_bp.route('/crawl', methods=['GET'])
 def crawl():
-    search_term = request.args.get('search_term')  # Recebe o termo de busca do front-end
+    search_term = request.args.get('search_term')
     if not search_term:
-        return jsonify({'error': 'Search term is required'}), 400
+        return jsonify({'error': 'Termo de busca não fornecido'}), 400
 
-    # Executa o spider do Scrapy e coleta os resultados
-    results = run_spider(search_term)
-
-    return jsonify(results)
+    try:
+        results = run_spider_and_return_data(search_term)
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # @main_bp.route('/items', methods=['POST'])
 # def create_item():

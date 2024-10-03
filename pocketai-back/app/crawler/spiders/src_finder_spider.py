@@ -1,17 +1,31 @@
 import scrapy
 
 class SrcSpider(scrapy.Spider):
-    name = "src_finder_spider"
+    name = "src_spider"
+    allowed_domains = ["google.com"]
+    start_urls = ["https://www.google.com/search?q=your+query"]
 
-    def __init__(self, search_term=None, *args, **kwargs):
-        super(SrcSpider, self).__init__(*args, **kwargs)
-        self.start_urls = [f'https://www.google.com/search?q={search_term}']  
+    def _init_(self, search_term='', *args, **kwargs):
+        super(SrcSpider, self)._init_(*args, **kwargs)
+        self.search_term = search_term
+        self.result_count = 0  # Contador para limitar os resultados
+        self.max_results = 2   # Limite de 2 resultados
+
+    def start_requests(self):
+        # Montar a URL de pesquisa do Google com base no termo de busca
+        url = f"https://www.google.com/search?q={self.search_term}"
+        yield scrapy.Request(url, self.parse)
+
     def parse(self, response):
-        results = []
-        for item in response.css('div.result'):  # Exemplo de seleção de item
-            title = item.css('h2::text').get()
+        for item in response.css('div.TzHB6b cLjAic K7khPe'):  
+            title = item.css('h3::text').get()
             link = item.css('a::attr(href)').get()
-            results.append({'title': title, 'link': link})
-        
-        # Retorna os resultados para o pipeline ou para o processo seguinte
-        yield {'results': results}
+
+            # Contar os resultados e parar após o quinto
+            if self.result_count < self.max_results and title and link:
+                self.result_count += 1
+                yield {'title': title, 'link': link}
+
+            # Interromper o loop após pegar 5 resultados
+            if self.result_count >= self.max_results:
+                break

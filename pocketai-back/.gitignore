@@ -1,0 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+.venv/
+venv/
+ENV/
+env.bak/
+env/
+
+# Flask's local SQLite database (caso esteja usando futuramente)
+instance/
+*.sqlite
+
+# Log files
+*.log
+*.pot
+*.pyc
+*.pyo
+
+# Packages
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+lib/
+libs/
+parts/
+sdist/
+develop-eggs/
+.installed.cfg
+*.egg-info/
+.Python
+
+# Pytest cache
+.pytest_cache/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Environments
+.env
+*.env
+
+# Virtual environment
+.venv/
+venv/
